@@ -114,9 +114,9 @@ end
 
 class Ministerio
   attr_accessor :listaAlumnos, :listaExamenes, :listaIngresantes, :listaNoIngresantes, :listaDatosEstadisticos
-	def initialize
+  def initialize
     #Arrays para toda la lógica
-		@listaAlumnos = Array.new
+    @listaAlumnos = Array.new
     @listaExamenes = Array.new
     @listaIngresantes = Array.new
     @listaNoIngresantes = Array.new
@@ -124,7 +124,7 @@ class Ministerio
     @listaDatosEstadisticos = Array.new(10)
     #cantPostulanteMasculino, cantPostulanteFemenino, cantIngresanteMasculino, cantIngresanteFemenino, cantNoIngresanteMasculino, cantNoIngresanteFemenino
     #ingresanteCN, ingresanteCP, noIngresanteCN, noIngresanteCP
-	end
+  end
 
   def obtenerPostulantesGenero
     a = b = 0
@@ -232,13 +232,13 @@ class Ministerio
       end
     end
   end
-	
-	def validarExistenciaAlumno(dni)
+
+  def validarExistenciaAlumno(dni)
     for alumno in listaAlumnos
       raise "El alumno ya ha sido registrado." if alumno.dni == dni
     end
   end
-	
+
   def registrarExamen(examen)
     validarExistenciaExamen(examen.codigoEvaluacion)
     listaExamenes.push(examen)
@@ -249,7 +249,7 @@ class Ministerio
       raise "El examen ya ha sido registrado." if examen.codigoEvaluacion == codigoEvaluacion
     end
   end
-	
+
   def registrarTutor(tutor)
     for alumno in listaAlumnos  #busca el alumno que le corresponde al tutor
       if alumno.dni == tutor.dniAlumno
@@ -267,20 +267,101 @@ class Ministerio
       end
     end
   end
-	
-  def registrarTutor(tutor)
-    for alumno in listaAlumnos  #busca el alumno que le corresponde al tutor
-      if alumno.dni == tutor.dniAlumno
-        n = alumno.listaTutores.length
-        raise "El alumno ya cuenta con 2 tutores registrados." if n == 2  #comprueba que el alumno no tenga más de dos tutores
-        alumno.listaTutores.push(tutor)
+
+  def ingresarRespuestasCorrectas(codigoEvaluacion, respuestas)
+    for examen in listaExamenes
+      if examen.codigoEvaluacion == codigoEvaluacion
+        validarCantidadRespuestas(examen, respuestas)
+        n = examen.numeroPregunta - 1
+        for i in 0..n
+          examen.listaRespuestasCorrectas[i] = respuestas[i]
+        end
       end
     end
   end
-	
+
+  def alumnoRindeExamen(dniAlumno, codigoEvaluacion)
+    #variables necesarias para el cálculo
+    respCorrectas = 0
+    respIncorrectas = 0
+    factorPuntaje = 0
+    puntajeEC = 0
+
+    #lógica para determinar el puntaje del alumno
+    for alumno in listaAlumnos
+      if alumno.dni == dniAlumno  #encuentra el alumno al que se le está asignando el examen
+        for examen in listaExamenes
+          if examen.codigoEvaluacion == codigoEvaluacion  #encuentra el examen que se le está asignando al alumno
+            #determinamos cuánto va a valer cada pregunta
+            if examen.numeroPregunta > 10
+              factorPuntaje = 5
+            else
+              factorPuntaje = 10
+            end
+
+            examen.simularResultados(examen)  #simula las respuestas del alumno
+
+            #ya tenemos los dos arrays, toca compararlos
+            for i in 0..examen.numeroPregunta
+              if examen.listaRespuestasAlumno[i] == "d" #respuesta en blanco
+                #no hace nada si la respuesta del alumno está en blanco
+              elsif examen.listaRespuestasAlumno[i] == examen.listaRespuestasCorrectas[i]
+                respCorrectas += 1    #contabiliza cada respuesta correcta
+              else
+                respIncorrectas += 1  #contabiliza cada respuesta incorrecta
+              end
+            end
+
+            #puts "#{examen.listaRespuestasAlumno}"
+            #puts "#{examen.listaRespuestasCorrectas}"
+
+            #calculamos el puntaje final
+            puntajeEC = (respCorrectas - (respIncorrectas * 0.5)) * factorPuntaje
+            if puntajeEC < 0  #se valida que el resultado no sea negativo
+              puntajeEC = 0
+            end
+          end
+        end
+
+        alumno.EC = puntajeEC #se le asigna el puntaje obtenido al alumno
+      end
+    end
+  end
+
+  def obtenerIngresantes(cantVacantes)
+    listaAlumnos = ordenarAlumnos
+    m = listaAlumnos.length - 1
+
+    #Armamos las listas de ingresantes y no ingresantes
+    for i in 0..m
+      if i < cantVacantes
+        listaIngresantes.push(listaAlumnos[i])
+      else
+        listaNoIngresantes.push(listaAlumnos[i])
+      end
+    end
+
+    for alumno in listaIngresantes
+      alumno.resultado = "INGRESA!"
+    end
+    #puts "#{listaIngresantes}" #línea de prueba para comprobar que la lista de ingresantes es generada correctamente.
+  end
+
+  def obtenerResultadosAlumnos
+    for alumno in listaAlumnos
+      alumno.CS = alumno.calificarSocioEconomica
+      alumno.RE = alumno.calificarRendimiento
+      alumno.puntajeFinal = (alumno.CS * 0.2) + (alumno.RE * 0.3) + (alumno.EC * 0.5)
+    end
+  end
+
   def validarCantidadRespuestas(examen, respuestas)
     m = respuestas.length
     raise "La cantidad de respuestas no coincide con la cantidad de preguntas del examen." if m != examen.numeroPregunta
+  end
+
+  def ordenarAlumnos
+    listaAlumnos.sort_by{|p| p.puntajeFinal}.reverse
   end
 end
 
