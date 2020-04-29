@@ -380,7 +380,6 @@ class Factoria
   end
 end
 
-
 class Vista
   def listarDatosGenerales(datos)
     puts ""
@@ -461,6 +460,10 @@ class Controlador
     @modelo = modelo
   end
 
+  def obtenerIngresantes(cantVacantes)
+    modelo.obtenerIngresantes(cantVacantes)
+  end
+
   def registrarAlumno(tipo, *arg)
     alum = Factoria.dameObjeto(tipo, *arg)
     begin
@@ -486,6 +489,24 @@ class Controlador
     begin
       modelo.registrarTutor(tut)
       vista.mostrarValido("Tutor registrado exitosamente!")
+    rescue Exception => e 
+      vista.mensajeError(e.message)
+    end
+  end
+
+  def ingresarRespuestasCorrectas(codigoEvaluacion, respuestas)
+    begin
+      modelo.ingresarRespuestasCorrectas(codigoEvaluacion, respuestas)
+      vista.mostrarValido("Respuestas ingresadas correctamente!")
+    rescue Exception => e 
+      vista.mensajeError(e.message)
+    end
+  end
+
+  def alumnoRindeExamen(dniAlumno, codigoEvaluacion)
+    begin
+      modelo.alumnoRindeExamen(dniAlumno, codigoEvaluacion)
+      vista.mostrarValido("Registro de examen rendido exitoso!")
     rescue Exception => e 
       vista.mensajeError(e.message)
     end
