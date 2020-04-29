@@ -503,7 +503,6 @@ class Controlador
     end
   end
 
-
   def alumnoRindeExamen(dniAlumno, codigoEvaluacion)
     begin
       modelo.alumnoRindeExamen(dniAlumno, codigoEvaluacion)
@@ -521,8 +520,7 @@ class Controlador
       vista.mensajeError(e.message)
     end
   end
-	
-	
+
   def imprimirListado   #General
     datos = modelo.listaAlumnos
     vista.listarDatosGenerales(datos)
@@ -542,7 +540,21 @@ class Controlador
     datos = modelo.listaNoIngresantes
     vista.listarNoIngresantes(datos)
   end
-	
+
+  def imprimirDatosEstudiante(dniAlumno)
+    alumno = modelo.obtenerAlumno(dniAlumno)
+    vista.listarDatosEstudiante(alumno)
+  end
+
+  def imprimirTutores(dniAlumno)
+    datos = modelo.obtenerTutores(dniAlumno)
+    vista.listarTutores(datos)    
+  end
+
+  def imprimirEstadisticas
+    datos = modelo.obtenerEstadisticas
+    vista.listarEstadisticas(datos)
+  end
 end
 
 minedu = Ministerio.new
