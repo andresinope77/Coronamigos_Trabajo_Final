@@ -243,3 +243,70 @@ class Ministerio
   end
 end
 
+class Factoria
+  def self.dameObjeto(tipo, *arg)
+    case tipo
+    when "AN"
+      AlumnoNacional.new(arg[0], arg[1], arg[2], arg[3], arg[4], arg[5],arg[6])
+    when "AP"
+      AlumnoParticular.new(arg[0], arg[1], arg[2], arg[3], arg[4], arg[5],arg[6])
+    when "EX"
+      Examen.new(arg[0], arg[1])
+    when "TU"
+      Tutor.new(arg[0], arg[1], arg[2], arg[3], arg[4])
+    end
+  end
+end
+
+
+class Vista
+  def mensajeError(m)
+    puts "Error: #{m}"
+  end
+
+  def mostrarValido(m)
+    puts m
+  end
+end
+
+class Controlador
+  attr_accessor :vista, :modelo
+  def initialize(vista, modelo)
+    @vista = vista
+    @modelo = modelo
+  end
+
+  def registrarAlumno(tipo, *arg)
+    alum = Factoria.dameObjeto(tipo, *arg)
+    begin
+      modelo.registrarAlumno(alum)
+      vista.mostrarValido("Alumno registrado exitosamente!")
+    rescue Exception => e 
+      vista.mensajeError(e.message)
+    end
+  end
+
+  def registrarExamen(tipo, *arg)
+    ex = Factoria.dameObjeto(tipo, *arg)
+    begin
+      modelo.registrarExamen(ex)
+      vista.mostrarValido("Examen registrado exitosamente!")
+    rescue Exception => e 
+      vista.mensajeError(e.message)
+    end
+  end
+
+  def registrarTutor(tipo, *arg)
+    tut = Factoria.dameObjeto(tipo, *arg)
+    begin
+      modelo.registrarTutor(tut)
+      vista.mostrarValido("Tutor registrado exitosamente!")
+    rescue Exception => e 
+      vista.mensajeError(e.message)
+    end
+  end
+end
+
+minedu = Ministerio.new
+vista = Vista.new
+controlador = Controlador.new(vista, minedu)
