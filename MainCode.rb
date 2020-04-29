@@ -131,5 +131,14 @@ class Ministerio
       end
     end
   end	
+  def registrarTutor(tutor)
+    for alumno in listaAlumnos  #busca el alumno que le corresponde al tutor
+      if alumno.dni == tutor.dniAlumno
+        n = alumno.listaTutores.length
+        raise "El alumno ya cuenta con 2 tutores registrados." if n == 2  #comprueba que el alumno no tenga más de dos tutores
+        alumno.listaTutores.push(tutor)
+      end
+    end
+  end
 end
 
