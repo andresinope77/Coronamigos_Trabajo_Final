@@ -1,5 +1,5 @@
 #Trabajo Final
-#Grupo Coronamigos
+#Grupo: Coronamigos
 #Programación Orientada a Objetos
 
 class Alumno
@@ -16,90 +16,91 @@ class Alumno
 end
 
 class AlumnoNacional < Alumno
-	attr_accessor :tipo, :promedio2do, :colegio
-  	def initialize(dni, nombre, apellido, edad, genero, tipo, promedio2do)
- 		super(dni, nombre, apellido, edad, genero)
- 		@colegio = "NACIONAL"
- 		@tipo = tipo.upcase
- 		@promedio2do = promedio2do
- 	end
- 	def calificarSocioEconomica
- 		if tipo == "RURAL"
- 			return 100
-		elsif tipo == "URBANA"
- 			return 100
- 		else
- 			return 0
- 		end
- 	end
+  attr_accessor :tipo, :promedio2do, :colegio
+  def initialize(dni, nombre, apellido, edad, genero, tipo, promedio2do)
+    super(dni, nombre, apellido, edad, genero)
+    @colegio = "NACIONAL"
+    @tipo = tipo.upcase
+    @promedio2do = promedio2do
+  end
 
- 	def calificarRendimiento
- 		if promedio2do < 11
- 			return 0
-		elsif promedio2do < 14
- 			return 20
-		elsif promedio2do < 16
- 			return 40
-		elsif promedio2do < 18
- 			return 60
-		elsif promedio2do < 19
- 			return 80
- 		else
- 			return 100
- 		end
- 	end
+  def calificarSocioEconomica
+    if tipo == "RURAL"
+      return 100
+    elsif tipo == "URBANA"
+      return 100
+    else
+      return 0
+    end
+  end
+
+  def calificarRendimiento
+    if promedio2do < 11
+      return 0
+    elsif promedio2do < 14
+      return 20
+    elsif promedio2do < 16
+      return 40
+    elsif promedio2do < 18
+      return 60
+    elsif promedio2do < 19
+      return 80
+    else
+      return 100
+    end
+  end
 end
 
 class AlumnoParticular < Alumno
-	attr_accessor :pension, :puesto2do, :colegio
- 	def initialize(dni, nombre, apellido, edad, genero, pension, puesto2do)
- 		super(dni, nombre, apellido, edad, genero)
- 		@colegio = "PARTICULAR"
- 		@pension = pension
- 		@puesto2do = puesto2do
- 	end
- 	def calificarSocioEconomica
- 		if pension <= 200
- 			return 90
-  	elsif pension <= 400
-  		return 70
-		elsif pension <= 600
- 			return 50
- 		else
- 			return 40
- 		end
- 	end
+  attr_accessor :pension, :puesto2do, :colegio
+  def initialize(dni, nombre, apellido, edad, genero, pension, puesto2do)
+    super(dni, nombre, apellido, edad, genero)
+    @colegio = "PARTICULAR"
+    @pension = pension
+    @puesto2do = puesto2do
+  end
 
- 	def calificarRendimiento
- 		if puesto2do < 4
- 			return 100
-		elsif puesto2do < 6
- 			return 80
-		elsif puesto2do < 11
- 			return 60
-		elsif puesto2do < 21
- 			return 40
- 		else
- 			return 0
- 		end
- 	end
+  def calificarSocioEconomica
+    if pension <= 200
+      return 90
+    elsif pension <= 400
+      return 70
+    elsif pension <= 600
+      return 50
+    else
+      return 40
+    end
+  end
 
+  def calificarRendimiento
+    if puesto2do < 4
+      return 100
+    elsif puesto2do < 6
+      return 80
+    elsif puesto2do < 11
+      return 60
+    elsif puesto2do < 21
+      return 40
+    else
+      return 0
+    end
+  end
 end
 
 class Tutor
-	attr_accessor :dniAlumno, :dniTutor, :nombre, :apellido, :parentesco
-	def initialize(dniAlumno, dniTutor, nombre, apellido, parentesco)
-		@dniAlumno, @dniTutor, @nombre, @apellido, @parentesco = dniAlumno, dniTutor, nombre, apellido, parentesco
-	end
+  attr_accessor :dniAlumno, :dniTutor, :nombre, :apellido, :parentesco
+  def initialize(dniAlumno, dniTutor, nombre, apellido, parentesco)
+    @dniAlumno, @dniTutor, @nombre, @apellido, @parentesco = dniAlumno, dniTutor, nombre, apellido, parentesco
+  end
 end
 
 class Examen
-	attr_accessor :codigoEvaluacion, :numeroPregunta, :listaRespuestasAlumno, :listaRespuestasCorrectas
-	def initialize(codigoEvaluacion, numeroPregunta)
-		@codigoEvaluacion, @numeroPregunta = codigoEvaluacion, numeroPregunta
+  attr_accessor :codigoEvaluacion, :numeroPregunta, :listaRespuestasAlumno, :listaRespuestasCorrectas
+  def initialize(codigoEvaluacion, numeroPregunta)
+    @codigoEvaluacion, @numeroPregunta = codigoEvaluacion, numeroPregunta
     @listaRespuestasAlumno = Array.new(numeroPregunta)
     @listaRespuestasCorrectas = Array.new(numeroPregunta)
-	end
+  end
 
   def simularResultados(examen)
     #lógica para recorrer todo el array y asignale una letra aleatoria
@@ -380,6 +381,7 @@ class Factoria
   end
 end
 
+
 class Vista
   def listarDatosGenerales(datos)
     puts ""
@@ -443,8 +445,8 @@ class Vista
     puts "Porcentaje ingresantes por tipo de Colegio.    Nacional: " + "#{datos[6].to_s}%".ljust(8) + "Particular: " + datos[7].to_s + "%"
     puts "Porcentaje no ingresantes por tipo de Colegio. Nacional: " + "#{datos[8].to_s}%".ljust(8) + "Particular: " + datos[9].to_s + "%"
   end
-	
-	def mensajeError(m)
+
+  def mensajeError(m)
     puts "Error: #{m}"
   end
 
@@ -521,6 +523,11 @@ class Controlador
     end
   end
 
+  def imprimirListado   #General
+    datos = modelo.listaAlumnos
+    vista.listarDatosGenerales(datos)
+  end
+
   def imprimirListadoResultados
     datos = modelo.ordenarAlumnos
     vista.listarResultadosGenerales(datos)
@@ -574,7 +581,6 @@ controlador.ingresarRespuestasCorrectas(45, resp1)
 resp2 = Array["a","b","c","a","b","c","a","b","c","a","a","b","c","a","b","c","a","b","c","a"]
 controlador.ingresarRespuestasCorrectas(12, resp2)
 
-
 #Alumnos rinden el examen
 controlador.alumnoRindeExamen(78945612, 45)
 controlador.alumnoRindeExamen(12365478, 12)
@@ -588,3 +594,13 @@ controlador.obtenerIngresantes(3)
 controlador.imprimirListadoResultados   #Imprime los resultados de todos en orden.
 controlador.imprimirIngresantes         #Imprime la lista de ingresantes
 controlador.imprimirNoIngresantes       #Imprime la lsita de no ingresantes
+
+#Primer reporte solicitado
+controlador.imprimirDatosEstudiante(78945612)
+controlador.imprimirDatosEstudiante(12365478)
+#Segundo reporte solicitado
+controlador.imprimirTutores(78945612)
+controlador.imprimirTutores(98744113)
+
+#Reporte estadístico
+controlador.imprimirEstadisticas
