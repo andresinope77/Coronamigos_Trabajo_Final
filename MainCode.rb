@@ -119,5 +119,17 @@ class Ministerio
     @listaIngresantes = Array.new
     @listaNoIngresantes = Array.new
 	end
-	
+  def registrarAlumno(alumno)
+    validarExistenciaAlumno(alumno.dni)
+    listaAlumnos.push(alumno)
+  end
+
+  def obtenerAlumno(dniAlumno)
+    for alumno in listaAlumnos
+      if alumno.dni == dniAlumno
+        return alumno
+      end
+    end
+  end	
 end
+
