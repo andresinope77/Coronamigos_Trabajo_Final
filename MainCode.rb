@@ -503,6 +503,7 @@ class Controlador
     end
   end
 
+
   def alumnoRindeExamen(dniAlumno, codigoEvaluacion)
     begin
       modelo.alumnoRindeExamen(dniAlumno, codigoEvaluacion)
@@ -511,6 +512,37 @@ class Controlador
       vista.mensajeError(e.message)
     end
   end
+
+  def obtenerResultadosAlumnos
+    begin
+      modelo.obtenerResultadosAlumnos
+      vista.mostrarValido("Resultados obtenidos exitosamente!")
+    rescue Exception => e 
+      vista.mensajeError(e.message)
+    end
+  end
+	
+	
+  def imprimirListado   #General
+    datos = modelo.listaAlumnos
+    vista.listarDatosGenerales(datos)
+  end
+
+  def imprimirListadoResultados
+    datos = modelo.ordenarAlumnos
+    vista.listarResultadosGenerales(datos)
+  end
+
+  def imprimirIngresantes
+    datos = modelo.listaIngresantes
+    vista.listarIngresantes(datos)
+  end
+
+  def imprimirNoIngresantes
+    datos = modelo.listaNoIngresantes
+    vista.listarNoIngresantes(datos)
+  end
+	
 end
 
 minedu = Ministerio.new
@@ -534,3 +566,18 @@ resp1 = Array["a","b","c","a","b","c","a","b","c","a"]
 controlador.ingresarRespuestasCorrectas(45, resp1)
 resp2 = Array["a","b","c","a","b","c","a","b","c","a","a","b","c","a","b","c","a","b","c","a"]
 controlador.ingresarRespuestasCorrectas(12, resp2)
+
+
+#Alumnos rinden el examen
+controlador.alumnoRindeExamen(78945612, 45)
+controlador.alumnoRindeExamen(12365478, 12)
+controlador.alumnoRindeExamen(65412877, 45)
+controlador.alumnoRindeExamen(65412888, 45)
+controlador.alumnoRindeExamen(98744113, 45)
+
+controlador.obtenerResultadosAlumnos    #Calcula los resultados de todos los alumnos
+
+controlador.obtenerIngresantes(3)
+controlador.imprimirListadoResultados   #Imprime los resultados de todos en orden.
+controlador.imprimirIngresantes         #Imprime la lista de ingresantes
+controlador.imprimirNoIngresantes       #Imprime la lsita de no ingresantes
