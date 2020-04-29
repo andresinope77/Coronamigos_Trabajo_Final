@@ -521,11 +521,6 @@ class Controlador
     end
   end
 
-  def imprimirListado   #General
-    datos = modelo.listaAlumnos
-    vista.listarDatosGenerales(datos)
-  end
-
   def imprimirListadoResultados
     datos = modelo.ordenarAlumnos
     vista.listarResultadosGenerales(datos)
