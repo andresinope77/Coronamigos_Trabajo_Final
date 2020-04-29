@@ -1,12 +1,13 @@
 #Trabajo Final
 #Grupo Coronamigos
+#Programación Orientada a Objetos
 
 class Alumno
-	attr_accessor :dni, :nombre, :apellido, :edad, :genero, :CS, :RE, :EC, :puntajeFinal, :listaTutores, :resultado
-	def initialize(dni, nombre, apellido, edad, genero)
-  	@dni, @nombre, @apellido, @edad, @genero = dni, nombre, apellido, edad, genero
+  attr_accessor :dni, :nombre, :apellido, :edad, :genero, :CS, :RE, :EC, :puntajeFinal, :listaTutores, :resultado
+  def initialize(dni, nombre, apellido, edad, genero)
+    @dni, @nombre, @apellido, @edad, @genero = dni, nombre, apellido, edad, genero
     @listaTutores = Array.new
-		    @CS = 0
+    @CS = 0
     @RE = 0
     @EC = 0
     @puntajeFinal = 0
@@ -99,6 +100,7 @@ class Examen
     @listaRespuestasAlumno = Array.new(numeroPregunta)
     @listaRespuestasCorrectas = Array.new(numeroPregunta)
 	end
+
   def simularResultados(examen)
     #lógica para recorrer todo el array y asignale una letra aleatoria
     n = examen.numeroPregunta - 1
@@ -111,14 +113,113 @@ class Examen
 end
 
 class Ministerio
-  attr_accessor :listaAlumnos, :listaExamenes, :listaIngresantes, :listaNoIngresantes
+  attr_accessor :listaAlumnos, :listaExamenes, :listaIngresantes, :listaNoIngresantes, :listaDatosEstadisticos
 	def initialize
     #Arrays para toda la lógica
 		@listaAlumnos = Array.new
     @listaExamenes = Array.new
     @listaIngresantes = Array.new
     @listaNoIngresantes = Array.new
+    #Variables para estadísticas
+    @listaDatosEstadisticos = Array.new(10)
+    #cantPostulanteMasculino, cantPostulanteFemenino, cantIngresanteMasculino, cantIngresanteFemenino, cantNoIngresanteMasculino, cantNoIngresanteFemenino
+    #ingresanteCN, ingresanteCP, noIngresanteCN, noIngresanteCP
 	end
+
+  def obtenerPostulantesGenero
+    a = b = 0
+    for alumno in listaAlumnos
+      if alumno.genero == "Masculino"
+        a += 1
+      elsif alumno.genero == "Femenino"
+        b += 1
+      else
+        #No hace nada.
+      end
+    end
+
+    listaDatosEstadisticos[0] = a
+    listaDatosEstadisticos[1] = b
+  end
+
+  def obtenerIngresantesGenero
+    a = b = 0
+    for alumno in listaIngresantes
+      if alumno.genero == "Masculino"
+        a += 1
+      elsif alumno.genero == "Femenino"
+        b += 1
+      else
+        #No hace nada.
+      end
+    end
+
+    listaDatosEstadisticos[2] = a
+    listaDatosEstadisticos[3] = b
+  end
+
+  def obtenerNoIngresantesGenero
+    a = b = 0
+    for alumno in listaNoIngresantes
+      if alumno.genero == "Masculino"
+        a += 1
+      elsif alumno.genero == "Femenino"
+        b += 1
+      else
+        #No hace nada.
+      end
+    end
+
+    listaDatosEstadisticos[4] = a
+    listaDatosEstadisticos[5] = b
+  end
+
+  def obtenerIngresantesColegio
+    a = b = 0
+    c = listaIngresantes.length
+
+    for alumno in listaIngresantes
+      if alumno.colegio == "NACIONAL"
+        a += 1
+      elsif alumno.colegio == "PARTICULAR"
+        b += 1
+      else
+        #No hace nada.
+      end
+    end
+
+    listaDatosEstadisticos[6] = (a.to_f / c.to_f * 100.0).round(2)
+    listaDatosEstadisticos[7] = (b.to_f / c.to_f * 100.0).round(2)
+  end
+
+  def obtenerNoIngresantesColegio
+    a = b = 0
+    c = listaNoIngresantes.length
+
+    for alumno in listaNoIngresantes
+      if alumno.colegio == "NACIONAL"
+        a += 1
+      elsif alumno.colegio == "PARTICULAR"
+        b += 1
+      else
+        #No hace nada.
+      end
+    end
+
+    listaDatosEstadisticos[8] = (a.to_f / c.to_f * 100.0).round(2)
+    listaDatosEstadisticos[9] = (b.to_f / c.to_f * 100.0).round(2)
+  end
+
+  def obtenerEstadisticas
+    obtenerPostulantesGenero
+    obtenerIngresantesGenero
+    obtenerNoIngresantesGenero
+    obtenerIngresantesColegio
+    obtenerNoIngresantesColegio
+
+    return listaDatosEstadisticos
+  end
+
   def registrarAlumno(alumno)
     validarExistenciaAlumno(alumno.dni)
     listaAlumnos.push(alumno)
