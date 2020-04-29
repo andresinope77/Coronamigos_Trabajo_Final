@@ -231,7 +231,25 @@ class Ministerio
         return alumno
       end
     end
-  end	
+  end
+	
+	def validarExistenciaAlumno(dni)
+    for alumno in listaAlumnos
+      raise "El alumno ya ha sido registrado." if alumno.dni == dni
+    end
+  end
+	
+  def registrarExamen(examen)
+    validarExistenciaExamen(examen.codigoEvaluacion)
+    listaExamenes.push(examen)
+  end
+
+  def validarExistenciaExamen(codigoEvaluacion)
+    for examen in listaExamenes
+      raise "El examen ya ha sido registrado." if examen.codigoEvaluacion == codigoEvaluacion
+    end
+  end
+	
   def registrarTutor(tutor)
     for alumno in listaAlumnos  #busca el alumno que le corresponde al tutor
       if alumno.dni == tutor.dniAlumno
@@ -240,6 +258,29 @@ class Ministerio
         alumno.listaTutores.push(tutor)
       end
     end
+  end
+
+  def obtenerTutores(dniAlumno)
+    for alumno in listaAlumnos
+      if alumno.dni == dniAlumno
+        return alumno.listaTutores
+      end
+    end
+  end
+	
+  def registrarTutor(tutor)
+    for alumno in listaAlumnos  #busca el alumno que le corresponde al tutor
+      if alumno.dni == tutor.dniAlumno
+        n = alumno.listaTutores.length
+        raise "El alumno ya cuenta con 2 tutores registrados." if n == 2  #comprueba que el alumno no tenga más de dos tutores
+        alumno.listaTutores.push(tutor)
+      end
+    end
+  end
+	
+  def validarCantidadRespuestas(examen, respuestas)
+    m = respuestas.length
+    raise "La cantidad de respuestas no coincide con la cantidad de preguntas del examen." if m != examen.numeroPregunta
   end
 end
 
@@ -310,3 +351,21 @@ end
 minedu = Ministerio.new
 vista = Vista.new
 controlador = Controlador.new(vista, minedu)
+
+controlador.registrarAlumno("AP", 78945612, "Andres", "Inope", 15, "Masculino", 1200, 5)
+controlador.registrarAlumno("AN", 12365478, "Paolo", "Guerrero", 11, "Masculino", "RURAL", 15)
+controlador.registrarAlumno("AP", 65412877, "Adriana", "Lima", 12, "Femenino", 1800, 8)
+controlador.registrarAlumno("AN", 65412888, "Chapo", "Guzman", 13, "Masculino", "RURAL", 14)
+controlador.registrarAlumno("AP", 98744113, "Pablo", "Escobar", 11, "Masculino", 2500, 1)
+
+controlador.registrarTutor("TU", 78945612, 65412382, "German", "Carty", "Padre")
+controlador.registrarTutor("TU", 78945612, 65421555, "Johan", "Solis", "Tio")
+controlador.registrarTutor("TU", 98744113, 65412382, "Frodo", "Arendale", "Tio")
+
+controlador.registrarExamen("EX", 45, 10)
+controlador.registrarExamen("EX", 12, 20)
+
+resp1 = Array["a","b","c","a","b","c","a","b","c","a"]
+controlador.ingresarRespuestasCorrectas(45, resp1)
+resp2 = Array["a","b","c","a","b","c","a","b","c","a","a","b","c","a","b","c","a","b","c","a"]
+controlador.ingresarRespuestasCorrectas(12, resp2)
